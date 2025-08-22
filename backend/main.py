@@ -1,67 +1,92 @@
 # backend/main.py
-import nltk
-nltk.download('movie_reviews')
-from nltk.corpus import movie_reviews
-
+import random
+import joblib
+from datasets import load_dataset
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
-import joblib
-import random
-import os
-import json
 
-# --- Load NLTK movie reviews (map pos->happy, neg->sad) ---
-texts = [' '.join(movie_reviews.words(fid)) for fid in movie_reviews.fileids()]
-labels = [
-    "happy" if movie_reviews.categories(fid)[0] == "pos" else "sad"
-    for fid in movie_reviews.fileids()
-]
+# --- Load GoEmotions dataset ---
+dataset = load_dataset("go_emotions", "simplified")
 
-# --- Load extra_data from JSON --- 
-with open(os.path.join(os.path.dirname(__file__), "emotions_dataset.json"), "r") as f: 
-    extra_data = json.load(f)
+# --- Map GoEmotions labels to our 4 categories ---
+emotion_map = {
+    "joy": "happy",
+    "amusement": "happy",
+    "approval": "happy",
+    "love": "happy",
+    "optimism": "happy",
+    "gratitude": "happy",
+    "pride": "happy",
 
-# --- Simple augmentation: shuffle, add variations ---
-augmented_texts = []
-augmented_labels = []
+    "sadness": "sad",
+    "disappointment": "sad",
+    "remorse": "sad",
+    "grief": "sad",
 
-def augment_texts(label, samples, n=200):  
-    for _ in range(n):  
-        base = random.choice(samples)
-        variation = random.choice([
-            "", "!", "!!", ".", " so much", " really", " absolutely"
-        ])
-        augmented_texts.append(base + variation)
-        augmented_labels.append(label)
+    "anger": "angry",
+    "annoyance": "angry",
+    "disapproval": "angry",
 
-# Generate ~200 samples per emotion class
-for emotion, samples in extra_data.items():
-    augment_texts(emotion, samples, n=200)
+    "neutral": "neutral",
+}
 
-# --- Combine with mapped NLTK dataset ---
-texts += augmented_texts
-labels += augmented_labels
+label_names = dataset["train"].features["labels"].feature.names
+
+texts = []
+labels = []
+
+for split in ["train", "validation", "test"]:
+    for row in dataset[split]:
+        emotion_ids = row["labels"]  # list[int]
+        if not emotion_ids:
+            continue
+        mapped_labels = [
+            emotion_map[label_names[e]]
+            for e in emotion_ids
+            if label_names[e] in emotion_map
+        ]
+        if mapped_labels:
+            texts.append(row["text"])
+            labels.append(mapped_labels[0])  # pick first valid mapping
+
+# --- Balance the dataset ---
+from collections import Counter
+
+counts = Counter(labels)
+min_count = min(counts.values())
+
+balanced_texts = []
+balanced_labels = []
+for label in set(labels):
+    samples = [(t, l) for t, l in zip(texts, labels) if l == label]
+    chosen = random.sample(samples, min_count)
+    for t, l in chosen:
+        balanced_texts.append(t)
+        balanced_labels.append(l)
+
+print("Class distribution (balanced):", Counter(balanced_labels))
 
 # --- Train/test split ---
 X_train, X_test, y_train, y_test = train_test_split(
-    texts, labels, test_size=0.2, random_state=42, stratify=labels
+    balanced_texts, balanced_labels,
+    test_size=0.2, random_state=42, stratify=balanced_labels
 )
 
-# --- Pipeline: TF-IDF + Logistic Regression ---
+# --- TF-IDF + Logistic Regression ---
 clf = Pipeline([
     ("tfidf", TfidfVectorizer(stop_words="english", ngram_range=(1,2), min_df=2, max_df=0.9)),
     ("logreg", LogisticRegression(max_iter=1000, solver="liblinear", random_state=42)),
 ])
 
-# --- Train model ---
 clf.fit(X_train, y_train)
 
 # --- Evaluate ---
 y_pred = clf.predict(X_test)
-print(f"Accuracy: {accuracy_score(y_test, y_pred):.3f}")
+print(f"\nAccuracy: {accuracy_score(y_test, y_pred):.3f}")
+print("\nClassification Report:")
 print(classification_report(y_test, y_pred))
 
 # --- Save model ---
