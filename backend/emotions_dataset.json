@@ -1,0 +1,50 @@
+{
+  "happy": [
+    "I am so happy and excited that the movie turned out better than I ever imagined, leaving me smiling the entire time.",
+    "This is the best day of my life because the film filled me with joy and pure entertainment from start to finish.",
+    "I loved the experience so much, the actors did an outstanding job and every scene made me feel warm and cheerful.",
+    "Everything feels amazing right now after watching such a delightful performance that exceeded all of my expectations.",
+    "That movie made me laugh so hard and brought back memories that filled me with happiness.",
+    "The way the story was told left me in a wonderful mood and I couldn\u2019t stop talking about it after it ended.",
+    "I feel uplifted, inspired, and grateful for such a beautiful experience that filled my heart with joy.",
+    "My friends and I left the theater smiling, thrilled by how positive and charming the movie was.",
+    "The atmosphere felt magical and gave me a strong sense of happiness and satisfaction.",
+    "It was such a refreshing and cheerful story that I will definitely recommend to everyone I know."
+  ],
+  "sad": [
+    "I feel deeply sad because the movie reminded me of painful memories and left me in tears.",
+    "The ending was heartbreaking and made me cry for hours after leaving the theater.",
+    "Life feels heavy and dark after watching such a tragic storyline that shattered my mood.",
+    "The story was filled with despair and loneliness, and it left me feeling hollow inside.",
+    "I couldn\u2019t stop crying as the characters went through such painful experiences.",
+    "The film pulled me into its sadness so strongly that I felt drained and hopeless afterwards.",
+    "It reminded me of loss and grief that I have gone through in my own life.",
+    "Watching it was emotionally exhausting, and I walked away feeling broken and numb.",
+    "Every scene carried a sense of tragedy that weighed heavily on my heart.",
+    "The story ended in such sorrow that I could not shake the sadness even after hours."
+  ],
+  "neutral": [
+    "The movie was neither great nor bad, just a normal experience that didn\u2019t leave a strong impression.",
+    "I feel indifferent because the film was average and didn\u2019t evoke any powerful emotions.",
+    "It was okay to watch, but it didn\u2019t stand out as particularly memorable or special.",
+    "The storyline was fine, nothing too exciting but not disappointing either.",
+    "I left the theater feeling neutral, without any strong positive or negative thoughts.",
+    "It was just another movie, nothing unusual that would make me think about it afterwards.",
+    "I don\u2019t feel strongly about what I watched, it was just plain and acceptable.",
+    "The performances were decent but didn\u2019t leave me feeling emotional or invested.",
+    "Overall, it was a middle-of-the-road film with no highlights or major flaws.",
+    "The experience was perfectly normal, just an average way to pass time."
+  ],
+  "angry": [
+    "I was furious because the movie completely wasted my time with poor writing and terrible acting.",
+    "This film made me so angry that I wanted to walk out halfway through because of its incompetence.",
+    "The plot was frustratingly bad and filled with nonsense that made me boil with rage.",
+    "I cannot believe how careless and lazy the production felt, it was absolutely infuriating.",
+    "Every scene made me angrier as the story dragged on without any sense or logic.",
+    "The characters were written so poorly that it felt like an insult to the audience.",
+    "I felt frustrated and irritated because the pacing was unbearable and scenes were repetitive.",
+    "By the time the movie ended, I was fuming at how much of my time had been wasted.",
+    "This was one of the most maddening and poorly executed films I\u2019ve ever watched.",
+    "I walked out feeling annoyed, disappointed, and full of rage at such a pathetic effort."
+  ]
+}

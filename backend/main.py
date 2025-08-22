@@ -10,6 +10,8 @@ from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import accuracy_score, classification_report
 import joblib
 import random
+import os
+import json
 
 # --- Load NLTK movie reviews (map pos->happy, neg->sad) ---
 texts = [' '.join(movie_reviews.words(fid)) for fid in movie_reviews.fileids()]
@@ -18,37 +20,9 @@ labels = [
     for fid in movie_reviews.fileids()
 ]
 
-# --- Base extra samples ---
-extra_data = {
-    "happy": [
-        "I am so happy and excited!",
-        "This is the best day of my life!",
-        "I loved the experience, it was wonderful.",
-        "Everything feels amazing right now!",
-        "That movie made me smile and laugh."
-    ],
-    "sad": [
-        "I feel really sad and depressed.",
-        "I am heartbroken and lonely.",
-        "Life feels empty and dark.",
-        "I cried so much, I feel broken.",
-        "Nothing makes me happy anymore."
-    ],
-    "neutral": [
-        "I am just okay, nothing special.",
-        "It was an average experience.",
-        "Nothing much to say, just normal.",
-        "The situation is fine, nothing unusual.",
-        "I don’t feel strongly about this."
-    ],
-    "angry": [
-        "I am extremely angry right now!",
-        "This makes me furious and upset.",
-        "I can’t control my rage anymore.",
-        "That situation made me so mad!",
-        "I feel so frustrated and irritated."
-    ]
-}
+# --- Load extra_data from JSON --- 
+with open(os.path.join(os.path.dirname(__file__), "emotions_dataset.json"), "r") as f: 
+    extra_data = json.load(f)
 
 # --- Simple augmentation: shuffle, add variations ---
 augmented_texts = []
