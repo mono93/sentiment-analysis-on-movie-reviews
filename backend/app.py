@@ -1,7 +1,20 @@
 # backend/app.py
 from fastapi import FastAPI
 from pydantic import BaseModel
+from fastapi.middleware.cors import CORSMiddleware
 import joblib
+
+# Use a single FastAPI instance and add CORS middleware to it
+app = FastAPI(title="Sentiment & Emotion Classifier (TF-IDF)")
+
+# --- CORS setup ---
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173"],  # React dev server
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Load trained TF-IDF + Logistic Regression pipeline
 clf = joblib.load("sentiment_model.joblib")
@@ -9,10 +22,8 @@ clf = joblib.load("sentiment_model.joblib")
 class TextInput(BaseModel):
     text: str
 
-app = FastAPI(title="Sentiment & Emotion Classifier (TF-IDF)")
-
-@app.post("/predict")
-def predict(input: TextInput):
+@app.post("/analyze")
+def analyze(input: TextInput):
     # Predict label
     prediction = clf.predict([input.text])[0]
     
